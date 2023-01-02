@@ -9,5 +9,5 @@ class AIPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AIPost
-        fields = ['id', 'text', 'summary', 'questions', 'corectness']
+        fields = ['id', 'title', 'text', 'summary', 'questions', 'corectness']
  

@@ -4,7 +4,7 @@ import redis
 import json
 
 # Create your models here.
-API_KEY = ""
+API_KEY = "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"
 openai.api_key = API_KEY
 
 # Connect to the Redis server
@@ -13,6 +13,7 @@ redis_client = redis.Redis(host='localhost', port=6379, db=0)
 # model AIPost
 class AIPost(models.Model):
     # id is default PK
+    title = models.CharField(max_length=200, default="Title")
     created = models.DateTimeField(auto_now_add=True)
     text = models.TextField(blank=True, default='')
     #summary = models.TextField(blank=True, default='')
