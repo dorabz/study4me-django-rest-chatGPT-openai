@@ -1,9 +1,15 @@
 import openai
 from django.db import models
+import redis
+import json
 
 # Create your models here.
-API_KEY = "generate your api key on openai.com"
+API_KEY = "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"
 openai.api_key = API_KEY
+
+# Connect to the Redis server
+redis_client = redis.Redis(host='localhost', port=6379, db=0)
+
 # model AIPost
 class AIPost(models.Model):
     # id is default PK
@@ -15,6 +21,11 @@ class AIPost(models.Model):
 
     @property
     def summary(self):
+        # Check if the summary is in the cache
+        cache_key = f"summary:{self.pk}"
+        summary = redis_client.get(cache_key)
+        if summary:
+            return json.loads(summary)
 
         text = self.text
         response_1 = openai.Completion.create(
@@ -27,10 +38,19 @@ class AIPost(models.Model):
                 presence_penalty=0.0
         )
         summary = response_1["choices"][0]
+
+        # Store the summary in the cache
+        redis_client.set(cache_key, json.dumps(summary))
         return summary
 
     @property
     def questions(self):
+        # Check if the questions are in the cache
+        cache_key = f"questions:{self.pk}"
+        questions = redis_client.get(cache_key)
+        if questions:
+            return json.loads(questions)
+
         response_1 = self.summary
         response_2 = openai.Completion.create(
             model="text-davinci-002",
@@ -43,10 +63,18 @@ class AIPost(models.Model):
         )
 
         questions = response_2["choices"][0]["text"]
+
+        # Store the questions in the cache
+        redis_client.set(cache_key, json.dumps(questions))
         return questions
 
     @property
     def corectness(self):
+        # Check if the correctness assessment is in the cache
+        cache_key = f"corectness:{self.pk}"
+        corectness = redis_client.get(cache_key)
+        if corectness:
+            return json.loads(corectness)
 
         text = self.text
         response = openai.Completion.create(
@@ -60,10 +88,8 @@ class AIPost(models.Model):
         )
 
         corectness = response["choices"][0]["text"]
+
+        # Store the correctness assessment in the cache
+        redis_client.set(cache_key, json.dumps(corectness))
         return corectness
 
-    class Meta:
-        ordering = ['created']
-
-    def __str__(self):
-        return self.pk
