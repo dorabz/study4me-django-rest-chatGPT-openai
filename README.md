@@ -11,3 +11,8 @@ python manage.py makemigrations
 python manage.py migrate
 
 python manage.py runserver
+
+
+In separate terminal install redis and start the redis server:
+
+- redis-server  
