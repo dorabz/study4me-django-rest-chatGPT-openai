@@ -4,7 +4,7 @@ import redis
 import json
 
 # Create your models here.
-API_KEY = "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"
+API_KEY = ""
 openai.api_key = API_KEY
 
 # Connect to the Redis server
