@@ -1,6 +1,6 @@
-# digobr-back 
+# study4me-django-rest-chatGPT-openai
 
-Backend - Django for digobr-front
+Study4me is a web platform that helps users test their knowledge on specific topic, it writes summary on topic, asks users questions and validates answers.  This is repository for backend part of application written in Django Rest Framework, using Redis and OpenAI API.
 
 How to start:
 
